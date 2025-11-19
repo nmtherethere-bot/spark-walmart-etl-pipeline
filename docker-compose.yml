@@ -4,6 +4,11 @@ services:
     container_name: spark-runner
     command: ["sleep", "infinity"]
     working_dir: /opt/spark/work-dir
+
+    ports:
+      - "4040:4040"        # Spark UI
+      - "18080:18080"      # (Optional) Spark History Server
+
     environment:
       WALMART_INPUT_PATH: /data/walmart_sales.csv
       DATE_FORMAT: yyyy-MM-dd
@@ -12,6 +17,7 @@ services:
       BQ_TABLE: walmart_sales
       BQ_TEMP_BUCKET: your-temp-gcs-bucket
       GOOGLE_APPLICATION_CREDENTIALS: /secrets/sa.json
+
     volumes:
       - ./target:/app
       - ./data:/data

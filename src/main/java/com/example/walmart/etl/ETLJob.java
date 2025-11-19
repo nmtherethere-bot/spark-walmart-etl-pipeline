@@ -17,6 +17,9 @@ public class ETLJob {
         String mode = params.getOrDefault("mode", "append");
         String dateFormat = params.getOrDefault("dateFormat", "yyyy-MM-dd");
 
+        // Debug wait time for Spark UI (optional)
+        int uiWaitSeconds = Integer.parseInt(params.getOrDefault("uiWaitSeconds", "120"));
+
         // Dry-run mode: if --mode=dryrun, skip BigQuery params and output only previews
         boolean dryrun = "dryrun".equalsIgnoreCase(mode);
         String bqProject = dryrun ? null : required(params, "bqProject");
@@ -61,6 +64,12 @@ public class ETLJob {
                     .option("temporaryGcsBucket", tempBucket)
                     .mode(mode)
                     .save();
+        }
+        try {
+            System.out.println("Keeping Spark UI alive for " + uiWaitSeconds + " seconds...");
+            Thread.sleep(uiWaitSeconds * 1000L);
+        } catch (InterruptedException e) {
+            System.err.println("UI wait interrupted: " + e.getMessage());
         }
 
         spark.stop();
