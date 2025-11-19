@@ -1,0 +1,19 @@
+services:
+  spark:
+    image: apache/spark:3.5.0
+    container_name: spark-runner
+    command: ["sleep", "infinity"]
+    working_dir: /opt/spark/work-dir
+    environment:
+      WALMART_INPUT_PATH: /data/walmart_sales.csv
+      DATE_FORMAT: yyyy-MM-dd
+      BQ_PROJECT: your-gcp-project
+      BQ_DATASET: retail
+      BQ_TABLE: walmart_sales
+      BQ_TEMP_BUCKET: your-temp-gcs-bucket
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/sa.json
+    volumes:
+      - ./target:/app
+      - ./data:/data
+      - ./out:/out
+      - ./secrets:/secrets
