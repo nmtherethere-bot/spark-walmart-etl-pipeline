@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  spark:
+    image: apache/spark:3.5.0
+    container_name: spark-runner
+    command: ["sleep", "infinity"]   # keep container running
+    working_dir: /opt/spark/work-dir
+
+    environment:
+      # You can add custom env variables if needed
+      TZ: Asia/Kolkata
+
+    volumes:
+      - ./target:/app               # your jar will appear here after mvn package
+      - ./data:/data                # CSV input files
+      - ./output:/output            # parquet output directory
+
+    ports:
+      - "4040:4040"   # Spark UI
